@@ -1,20 +1,39 @@
-var seed = Math.floor(Math.random() * 1000000000000);
 var accent;
 var complement;
 var navTop;
 var topColor = "#fff";
 var currentSite = window.location.href;
-var gotSeed = getSeedFromURL();
-if (gotSeed == "") {
-  var newUrl = currentSite + "?s=" + seed;
-  location.href = newUrl;
-} else {
-  seed = parseInt(gotSeed);
+
+function getSeed() {
+  var seed = Math.floor(Math.random() * 1000000000000);
+  var gotSeed = getSeedFromURL();
+
+  if (gotSeed != "") {
+    seed = parseInt(gotSeed);
+  } else if (document.startup_name != "") {
+    codes = document.startup_name.split("")
+      .map(function(c) { return c.charCodeAt(0); } );
+    seed = codes.reduce(function(a,b) {a = ((a<<5) - a) + b; return a|0;});
+  } else {
+    var newUrl = currentSite + "?s=" + seed;
+    location.href = newUrl;
+  }
+
+  return seed;
 }
-$(document).ready(function() { 
+
+function getName(seed) {
+  return document.startup_name == ""    ?
+    startupify(seed)                    :
+    document.startup_name;
+}
+
+$(document).ready(function() {
+  var seed = getSeed();
   var startup = new Startup(seed);
 
-	var name = startupify(seed);
+  var name = startupify(seed);
+
   var bg = getBackground(seed + 1);
   
   var shadowAlpha = getAlpha(seed + 3, 0.3, 0.8);
