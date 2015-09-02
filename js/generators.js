@@ -213,6 +213,10 @@ function removeLastVowel (seed) {
 }
 
 function startupify (seed) {
+    // We let the user override the startup name by storing it in
+    // document.startup_name in index.html.
+    if (document.startup_name != "") { return document.startup_name; }
+  
     var results = [];
     results.push(commonWord(seed) + "r");
     results.push(commonWord(seed) + "it");
